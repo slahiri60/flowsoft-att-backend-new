@@ -5,8 +5,30 @@ dotenv.config();
 
 const app = express();
 
-app.get('/', (req, res) => {
-  res.status(200).json({ success: true, data: { id: 1 } });
+app.get('/api/v1/actionitems', (req, res) => {
+  res.status(200).json({ success: true, msg: 'Show all action items' });
+});
+
+app.get('/api/v1/actionitems/:id', (req, res) => {
+  res
+    .status(200)
+    .json({ success: true, msg: `Show action item ${req.params.id}` });
+});
+
+app.post('/api/v1/actionitems', (req, res) => {
+  res.status(200).json({ success: true, msg: 'Create new action item' });
+});
+
+app.put('/api/v1/actionitems/:id', (req, res) => {
+  res
+    .status(200)
+    .json({ success: true, msg: `Update action item ${req.params.id}` });
+});
+
+app.delete('/api/v1/actionitems/:id', (req, res) => {
+  res
+    .status(200)
+    .json({ success: true, msg: `Delete action item ${req.params.id}` });
 });
 
 const PORT = process.env.PORT || 5000;
