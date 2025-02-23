@@ -3,19 +3,37 @@ const Actionitem = require('../models/Actionitem');
 // @desc    Get all actionitems
 // @route   GET /api/v1/actionitems
 // @access  Private
-exports.getActionitems = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: 'Show all action items', hello: req.hello });
+exports.getActionitems = async (req, res, next) => {
+  try {
+    const actionitems = await Actionitem.find();
+
+    res.status(200).json({
+      success: true,
+      data: actionitems,
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
 };
 
 // @desc    Get single actionitem
 // @route   GET /api/v1/actionitems/:id
 // @access  Private
-exports.getActionitem = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Show action item ${req.params.id}` });
+exports.getActionitem = async (req, res, next) => {
+  try {
+    const actionitem = await Actionitem.findById(req.params.id);
+
+    if (!actionitem) {
+      return res.status(400).json({ success: false });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: actionitem,
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
 };
 
 // @desc    Create actionitem
