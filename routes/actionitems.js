@@ -1,30 +1,20 @@
 const express = require('express');
+const {
+  getActionitems,
+  getActionitem,
+  createActionitem,
+  updateActionitem,
+  deleteActionitem,
+} = require('../controllers/actionitems');
+
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.status(200).json({ success: true, msg: 'Show all action items' });
-});
+router.route('/').get(getActionitems).post(createActionitem);
 
-router.get('/:id', (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Show action item ${req.params.id}` });
-});
-
-router.post('/', (req, res) => {
-  res.status(200).json({ success: true, msg: 'Create new action item' });
-});
-
-router.put('/:id', (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Update action item ${req.params.id}` });
-});
-
-router.delete('/:id', (req, res) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Delete action item ${req.params.id}` });
-});
+router
+  .route('/:id')
+  .get(getActionitem)
+  .put(updateActionitem)
+  .delete(deleteActionitem);
 
 module.exports = router;
