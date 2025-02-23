@@ -2,7 +2,9 @@
 // @route   GET /api/v1/actionitems
 // @access  Private
 exports.getActionitems = (req, res, next) => {
-  res.status(200).json({ success: true, msg: 'Show all action items' });
+  res
+    .status(200)
+    .json({ success: true, msg: 'Show all action items', hello: req.hello });
 };
 
 // @desc    Get single actionitem
