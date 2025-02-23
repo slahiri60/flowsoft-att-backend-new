@@ -9,6 +9,7 @@ exports.getActionitems = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
+      count: actionitems.length,
       data: actionitems,
     });
   } catch (err) {
@@ -55,17 +56,46 @@ exports.createActionitem = async (req, res, next) => {
 // @desc    Update single actionitem
 // @route   PUT /api/v1/actionitems/:id
 // @access  Private
-exports.updateActionitem = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Update action item ${req.params.id}` });
+exports.updateActionitem = async (req, res, next) => {
+  try {
+    const actionitem = await Actionitem.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (!actionitem) {
+      return res.status(400).json({ success: false });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: actionitem,
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
 };
 
 // @desc    Delete single actionitem
 // @route   DELETE /api/v1/actionitems/:id
 // @access  Private
-exports.deleteActionitem = (req, res, next) => {
-  res
-    .status(200)
-    .json({ success: true, msg: `Delete action item ${req.params.id}` });
+exports.deleteActionitem = async (req, res, next) => {
+  try {
+    const actionitem = await Actionitem.findByIdAndDelete(req.params.id);
+
+    if (!actionitem) {
+      return res.status(400).json({ success: false });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
 };
