@@ -1,3 +1,5 @@
+const Actionitem = require('../models/Actionitem');
+
 // @desc    Get all actionitems
 // @route   GET /api/v1/actionitems
 // @access  Private
@@ -19,8 +21,17 @@ exports.getActionitem = (req, res, next) => {
 // @desc    Create actionitem
 // @route   POST /api/v1/actionitems
 // @access  Private
-exports.createActionitem = (req, res, next) => {
-  res.status(200).json({ success: true, msg: 'Create new action item' });
+exports.createActionitem = async (req, res, next) => {
+  try {
+    const actionitem = await Actionitem.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: actionitem,
+    });
+  } catch (err) {
+    res.status(400).json({ success: false });
+  }
 };
 
 // @desc    Update single actionitem

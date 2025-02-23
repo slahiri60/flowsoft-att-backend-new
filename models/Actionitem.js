@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const ActionitemSchema = new mongoose.Schema({
   summary: {
@@ -14,20 +14,17 @@ const ActionitemSchema = new mongoose.Schema({
   },
   criticality: {
     type: [String],
-    required: [true, 'Please add a criticality value'],
     enum: ['high', 'medium', 'low'],
     default: 'high',
   },
   importance: {
     type: [String],
-    required: [true, 'Please add an importance value'],
     enum: ['important', 'unimportant'],
     default: 'important',
   },
   dueDate: {
     type: Date,
     default: Date.now,
-    required: true,
   },
 });
 
