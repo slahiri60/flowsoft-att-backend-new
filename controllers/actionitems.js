@@ -14,7 +14,7 @@ exports.getActionitems = async (req, res, next) => {
       data: actionitems,
     });
   } catch (err) {
-    res.status(400).json({ success: false });
+    next(err);
   }
 };
 
@@ -39,12 +39,7 @@ exports.getActionitem = async (req, res, next) => {
       data: actionitem,
     });
   } catch (err) {
-    next(
-      new ErrorResponse(
-        `Action Item not found with id of ${req.params.id}`,
-        404
-      )
-    );
+    next(err);
   }
 };
 
@@ -60,7 +55,7 @@ exports.createActionitem = async (req, res, next) => {
       data: actionitem,
     });
   } catch (err) {
-    res.status(400).json({ success: false });
+    next(err);
   }
 };
 
@@ -79,7 +74,12 @@ exports.updateActionitem = async (req, res, next) => {
     );
 
     if (!actionitem) {
-      return res.status(400).json({ success: false });
+      return next(
+        new ErrorResponse(
+          `Action Item not found with id of ${req.params.id}`,
+          404
+        )
+      );
     }
 
     res.status(200).json({
@@ -87,7 +87,7 @@ exports.updateActionitem = async (req, res, next) => {
       data: actionitem,
     });
   } catch (err) {
-    res.status(400).json({ success: false });
+    next(err);
   }
 };
 
@@ -99,7 +99,12 @@ exports.deleteActionitem = async (req, res, next) => {
     const actionitem = await Actionitem.findByIdAndDelete(req.params.id);
 
     if (!actionitem) {
-      return res.status(400).json({ success: false });
+      return next(
+        new ErrorResponse(
+          `Action Item not found with id of ${req.params.id}`,
+          404
+        )
+      );
     }
 
     res.status(200).json({
@@ -107,6 +112,6 @@ exports.deleteActionitem = async (req, res, next) => {
       data: {},
     });
   } catch (err) {
-    res.status(400).json({ success: false });
+    next(err);
   }
 };
