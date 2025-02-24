@@ -14,8 +14,8 @@ const ActionitemSchema = new mongoose.Schema({
   },
   criticality: {
     type: [String],
-    enum: ['high', 'medium', 'low'],
-    default: 'high',
+    enum: ['critical', 'noncritical'],
+    default: 'critical',
   },
   importance: {
     type: [String],
@@ -26,6 +26,29 @@ const ActionitemSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+});
+
+// Function to Add days to current date based on Criticality and Importance
+function addDays(date, criticality, importance) {
+  const newDate = new Date(date);
+  let days = 0;
+  if (criticality == 'critical' && importance == 'important') {
+    days = 7;
+  } else if (criticality == 'critical' && importance == 'unimportant') {
+    days = 14;
+  } else if (criticality == 'noncritical' && importance == 'important') {
+    days = 21;
+  } else if (criticality == 'noncritical' && importance == 'unimportant') {
+    days = 28;
+  }
+
+  newDate.setDate(date.getDate() + days);
+  return newDate;
+}
+
+ActionitemSchema.pre('save', function (next) {
+  this.dueDate = addDays(this.dueDate, this.criticality, this.importance);
+  next();
 });
 
 module.exports = mongoose.model('ActionItem', ActionitemSchema);
