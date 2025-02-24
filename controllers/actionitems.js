@@ -1,3 +1,4 @@
+const ErrorResponse = require('../utils/errorResponse');
 const Actionitem = require('../models/Actionitem');
 
 // @desc    Get all actionitems
@@ -25,7 +26,12 @@ exports.getActionitem = async (req, res, next) => {
     const actionitem = await Actionitem.findById(req.params.id);
 
     if (!actionitem) {
-      return res.status(400).json({ success: false });
+      return next(
+        new ErrorResponse(
+          `Action Item not found with id of ${req.params.id}`,
+          404
+        )
+      );
     }
 
     res.status(200).json({
@@ -33,8 +39,12 @@ exports.getActionitem = async (req, res, next) => {
       data: actionitem,
     });
   } catch (err) {
-    //res.status(400).json({ success: false });
-    next(err);
+    next(
+      new ErrorResponse(
+        `Action Item not found with id of ${req.params.id}`,
+        404
+      )
+    );
   }
 };
 
