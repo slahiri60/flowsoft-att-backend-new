@@ -26,6 +26,15 @@ const ActionitemSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  status: {
+    type: [String],
+    enum: ['Pending', 'In Progress', 'Completed', 'Dropped'],
+    default: 'Pending',
+  },
+  timesdeferred: {
+    type: Number,
+    default: 0,
+  },
 });
 
 // Function to Add days to current date based on Criticality and Importance
