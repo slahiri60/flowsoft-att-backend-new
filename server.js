@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
+const cors = require('cors');
 
 // Load enviroment variables
 dotenv.config();
@@ -14,6 +15,8 @@ connectDB();
 const actionitems = require('./routes/actionitems');
 
 const app = express();
+
+app.use(cors());
 
 // Body parser
 app.use(express.json());
