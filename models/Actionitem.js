@@ -14,13 +14,13 @@ const ActionitemSchema = new mongoose.Schema({
   },
   criticality: {
     type: [String],
-    enum: ['critical', 'noncritical'],
-    default: 'critical',
+    enum: ['Critical', 'Noncritical'],
+    default: 'Critical',
   },
   importance: {
     type: [String],
-    enum: ['important', 'unimportant'],
-    default: 'important',
+    enum: ['Important', 'Unimportant'],
+    default: 'Important',
   },
   dueDate: {
     type: Date,
@@ -41,13 +41,13 @@ const ActionitemSchema = new mongoose.Schema({
 function addDays(date, criticality, importance) {
   const newDate = new Date(date);
   let days = 0;
-  if (criticality == 'critical' && importance == 'important') {
+  if (criticality == 'Critical' && importance == 'Important') {
     days = 7;
-  } else if (criticality == 'critical' && importance == 'unimportant') {
+  } else if (criticality == 'Critical' && importance == 'Unimportant') {
     days = 14;
-  } else if (criticality == 'noncritical' && importance == 'important') {
+  } else if (criticality == 'Noncritical' && importance == 'Important') {
     days = 21;
-  } else if (criticality == 'noncritical' && importance == 'unimportant') {
+  } else if (criticality == 'Noncritical' && importance == 'Unimportant') {
     days = 28;
   }
 
