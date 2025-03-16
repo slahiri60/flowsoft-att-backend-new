@@ -6,7 +6,26 @@ const Actionitem = require('../models/Actionitem');
 // @route   GET /api/v1/actionitems
 // @access  Private
 exports.getActionitems = asyncHandler(async (req, res, next) => {
-  const actionitems = await Actionitem.find();
+  let query;
+  const reqQuery = { ...req.query };
+  const removeFields = ['select', 'sort'];
+  removeFields.forEach((param) => delete reqQuery[param]);
+  let queryStr = JSON.stringify(reqQuery);
+  query = Actionitem.find(JSON.parse(queryStr));
+
+  if (req.query.select) {
+    const fields = req.query.select.split(',').join(' ');
+    query = query.select(fields);
+  }
+
+  if (req.query.sort) {
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  } else {
+    query = query.sort('-createdAt');
+  }
+
+  const actionitems = await query;
 
   res.status(200).json({
     success: true,
