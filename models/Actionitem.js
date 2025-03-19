@@ -35,6 +35,10 @@ const ActionitemSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // Function to Add days to current date based on Criticality and Importance
