@@ -5,6 +5,7 @@ const {
   createActionitem,
   updateActionitem,
   deleteActionitem,
+  actionitemsSearch,
 } = require('../controllers/actionitems');
 
 const router = express.Router();
@@ -16,5 +17,7 @@ router
   .get(getActionitem)
   .put(updateActionitem)
   .delete(deleteActionitem);
+
+router.route('/search/:keyword').get(actionitemsSearch);
 
 module.exports = router;

@@ -115,3 +115,22 @@ exports.deleteActionitem = asyncHandler(async (req, res, next) => {
     data: {},
   });
 });
+
+// @desc    Get all searched actionitems
+// @route   GET /api/v1/actionitems/search/:keyword
+// @access  Private
+exports.actionitemsSearch = asyncHandler(async (req, res, next) => {
+  const { keyword } = req.params;
+  const actionitems = await Actionitem.find({
+    $or: [
+      { summary: { $regex: keyword, $options: 'i' } },
+      { description: { $regex: keyword, $options: 'i' } },
+    ],
+  });
+
+  res.status(200).json({
+    success: true,
+    count: actionitems.length,
+    data: actionitems,
+  });
+});
