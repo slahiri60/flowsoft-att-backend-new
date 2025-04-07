@@ -29,7 +29,7 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
   const limit = parseInt(req.query.limit, 10) || 100;
   const skip = (page - 1) * limit;
 
-  query = query.skip(skip).limit(limit);
+  query = query.sort({ _id: 1 }).skip(skip).limit(limit);
 
   const actionitems = await query;
 
