@@ -7,17 +7,73 @@ const Actionitem = require('../models/Actionitem');
 // @access  Private
 exports.getActionitems = asyncHandler(async (req, res, next) => {
   let query;
+
+  // Copy request query
   const reqQuery = { ...req.query };
+
+  // Fields to exclude from filtering
   const removeFields = ['select', 'sort', 'page', 'limit'];
   removeFields.forEach((param) => delete reqQuery[param]);
+
+  // Process filter parameters
   let queryStr = JSON.stringify(reqQuery);
+
+  // Create operators ($gt, $gte, $lt, $lte, $in, etc)
+  queryStr = queryStr.replace(
+    /\b(gt|gte|lt|lte|in)\b/g,
+    (match) => `$${match}`
+  );
+
+  // Get base query
   query = Actionitem.find(JSON.parse(queryStr));
 
+  // Process custom filters
+
+  // Process criticality filters
+  if (req.query.criticality) {
+    const criticalitys = Array.isArray(req.query.criticality)
+      ? req.query.criticality
+      : [req.query.criticality];
+
+    // Use $in operator to match any of the selected criticalitys
+    query = query.find({
+      criticality: { $in: criticalitys },
+    });
+  }
+
+  // Process importance filters
+  if (req.query.importance) {
+    const importances = Array.isArray(req.query.importance)
+      ? req.query.importance
+      : [req.query.importance];
+
+    // Use $in operator to match any of the selected importances
+    query = query.find({
+      importance: { $in: importances },
+    });
+  }
+
+  // Process status filters
+  if (req.query.status) {
+    const statuss = Array.isArray(req.query.status)
+      ? req.query.status
+      : [req.query.status];
+
+    // Use $in operator to match any of the selected statuss
+    query = query.find({
+      status: { $in: statuss },
+    });
+  }
+
+  console.log('query after filtering: ' + query);
+
+  // Select Fields
   if (req.query.select) {
     const fields = req.query.select.split(',').join(' ');
     query = query.select(fields);
   }
 
+  // Sort
   if (req.query.sort) {
     const sortBy = req.query.sort.split(',').join(' ');
     query = query.sort(sortBy);
@@ -25,6 +81,7 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
     query = query.sort('-createdAt');
   }
 
+  // Pagination
   const page = parseInt(req.query.page, 10) || 1;
   const limit = parseInt(req.query.limit, 10) || 100;
   const skip = (page - 1) * limit;
