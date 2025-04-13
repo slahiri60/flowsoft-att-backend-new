@@ -90,6 +90,13 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
 
   const actionitems = await query;
 
+  // Set the X-Total-Count header in the response
+  const totalCount = await Actionitem.countDocuments();
+  res.set('X-Total-Count', totalCount);
+
+  // Also set Access-Control-Expose-Headers so clients can read the custom header
+  res.set('Access-Control-Expose-Headers', 'X-Total-Count');
+
   res.status(200).json({
     success: true,
     count: actionitems.length,
