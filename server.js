@@ -13,6 +13,7 @@ connectDB();
 
 // Route files
 const actionitems = require('./routes/actionitems');
+const auth = require('./routes/auth');
 
 const app = express();
 
@@ -28,6 +29,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Mount routers
 app.use('/api/v1/actionitems', actionitems);
+app.use('/api/v1/auth', auth);
 
 app.use(errorHandler);
 
