@@ -1,3 +1,4 @@
+// routes/actionitem.js
 const express = require('express');
 const {
   getActionitems,
@@ -7,17 +8,18 @@ const {
   deleteActionitem,
   actionitemsSearch,
 } = require('../controllers/actionitems');
+const { protect } = require('../middleware/auth');
 
 const router = express.Router();
 
-router.route('/').get(getActionitems).post(createActionitem);
+router.route('/').get(protect, getActionitems).post(protect, createActionitem);
 
 router
   .route('/:id')
-  .get(getActionitem)
-  .put(updateActionitem)
-  .delete(deleteActionitem);
+  .get(protect, getActionitem)
+  .put(protect, updateActionitem)
+  .delete(protect, deleteActionitem);
 
-router.route('/search/:keyword').get(actionitemsSearch);
+router.route('/search/:keyword').get(protect, actionitemsSearch);
 
 module.exports = router;
