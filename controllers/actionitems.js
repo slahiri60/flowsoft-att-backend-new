@@ -65,6 +65,17 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
     });
   }
 
+  // Process timesdeferred filters
+  if (req.query.timesdeferred) {
+    // If it's a simple number value
+    if (!isNaN(req.query.timesdeferred)) {
+      query = query.find({
+        timesdeferred: parseInt(req.query.timesdeferred),
+      });
+    }
+    // You could add additional handling here if needed
+  }
+
   console.log('query after filtering: ' + query);
 
   // Select Fields
