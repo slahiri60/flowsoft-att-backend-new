@@ -76,6 +76,30 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
     // You could add additional handling here if needed
   }
 
+  // Process dueDate filters
+  if (req.query.dueDate) {
+    // If it's a simple date string for exact match
+    if (
+      typeof req.query.dueDate === 'string' &&
+      !req.query.dueDate.includes('[')
+    ) {
+      // Convert to Date object for exact date matching
+      const date = new Date(req.query.dueDate);
+      // Match all items on that day (from start to end of the day)
+      const nextDay = new Date(date);
+      nextDay.setDate(date.getDate() + 1);
+
+      query = query.find({
+        dueDate: {
+          $gte: date,
+          $lt: nextDay,
+        },
+      });
+    }
+    // Otherwise, it will be processed by the existing query string logic
+    // which handles operators like dueDate[gt], dueDate[lt], etc.
+  }
+
   console.log('query after filtering: ' + query);
 
   // Select Fields
