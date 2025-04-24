@@ -11,6 +11,9 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
   // Copy request query
   const reqQuery = { ...req.query };
 
+  // Add a filter for the user
+  req.query.user = req.user.id;
+
   // Fields to exclude from filtering
   const removeFields = ['select', 'sort', 'page', 'limit'];
   removeFields.forEach((param) => delete reqQuery[param]);
@@ -24,8 +27,8 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
     (match) => `$${match}`
   );
 
-  // Get base query
-  query = Actionitem.find(JSON.parse(queryStr));
+  // Get base query; ensure the user filter is applied
+  query = Actionitem.find({ user: req.user.id, ...JSON.parse(queryStr) });
 
   // Process custom filters
 
