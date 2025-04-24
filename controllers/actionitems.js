@@ -164,6 +164,8 @@ exports.getActionitem = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/actionitems
 // @access  Private
 exports.createActionitem = asyncHandler(async (req, res, next) => {
+  req.body.user = req.user.id;
+
   const actionitem = await Actionitem.create(req.body);
 
   res.status(201).json({
