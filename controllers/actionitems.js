@@ -146,13 +146,23 @@ exports.getActionitems = asyncHandler(async (req, res, next) => {
 // @route   GET /api/v1/actionitems/:id
 // @access  Private
 exports.getActionitem = asyncHandler(async (req, res, next) => {
-  const actionitem = await Actionitem.findById(req.params.id);
+  let actionitem = await Actionitem.findById(req.params.id);
 
   if (!actionitem) {
     return next(
       new ErrorResponse(
         `Action Item not found with id of ${req.params.id}`,
         404
+      )
+    );
+  }
+
+  // Make sure user is Action Item owner
+  if (actionitem.user.toString() !== req.user.id) {
+    return next(
+      new ErrorResponse(
+        `User ${req.user.id} is not authorized to view this Action Item`,
+        401
       )
     );
   }
@@ -169,7 +179,7 @@ exports.getActionitem = asyncHandler(async (req, res, next) => {
 exports.createActionitem = asyncHandler(async (req, res, next) => {
   req.body.user = req.user.id;
 
-  const actionitem = await Actionitem.create(req.body);
+  let actionitem = await Actionitem.create(req.body);
 
   res.status(201).json({
     success: true,
@@ -195,6 +205,16 @@ exports.updateActionitem = asyncHandler(async (req, res, next) => {
       new ErrorResponse(
         `Action Item not found with id of ${req.params.id}`,
         404
+      )
+    );
+  }
+
+  // Make sure user is Action Item owner
+  if (actionitem.user.toString() !== req.user.id) {
+    return next(
+      new ErrorResponse(
+        `User ${req.user.id} is not authorized to update this Action Item`,
+        401
       )
     );
   }
